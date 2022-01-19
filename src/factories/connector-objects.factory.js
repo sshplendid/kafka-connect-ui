@@ -12,7 +12,13 @@ angularAPP.factory('connectorObjects', function (KafkaConnectFactory, supportedC
                return enhanceConnector(connector);
           });
        },
-       getTopics: configurationTopicsFilter,
+       getTopics: function (connector) {
+           return KafkaConnectFactory.getConnectorTopics(connector.name).then(function successCallback(res) {
+               const topics = res[connector.name]?.topics ?? []
+               console.log(connector.name, topics);
+               return topics
+           });
+       },
        getConnectorTemplate : function(connectorConfig) {
            return supportedConnectorsFactory.getSupportedConnectorObj(connectorConfig["connector.class"]);
        }

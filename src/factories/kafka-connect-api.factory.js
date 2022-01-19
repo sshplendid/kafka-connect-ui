@@ -22,6 +22,10 @@ angularAPP.service('KafkaConnectFactory', function ($rootScope, $http, $location
       var url = env.KAFKA_CONNECT() + '/connectors/' + connectorName;
       return req('GET', url);
     },
+    getConnectorTopics: function (connectorName) {
+      var url = env.KAFKA_CONNECT() + '/connectors/' + connectorName + '/topics';
+      return req('GET', url);
+    },
     getConnectorTasks: function (connectorName) {
       var url = env.KAFKA_CONNECT() + '/connectors/' + connectorName + '/tasks';
       return req('GET', url);

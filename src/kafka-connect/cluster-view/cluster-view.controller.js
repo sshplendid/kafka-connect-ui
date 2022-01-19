@@ -13,17 +13,18 @@ angularAPP.controller('ClusterViewCtrl', function ($scope, $log, $http, env, con
     $http.get(env.KAFKA_CONNECT() + '/connectors').then(function(response){
         $scope.chartHeight = response.data.length * 45;
         angular.forEach(response.data, function(con){
-           $http.get(env.KAFKA_CONNECT() + '/connectors/' + con).then(function(response){
+           $http.get(env.KAFKA_CONNECT() + '/connectors/' + con).then(async function(response){
                 var connector = response.data;
                 var row;
                 var template = connectorObjects.getConnectorTemplate(connector.config);
-                var topics = connectorObjects.getTopics(connector.config);
-                var workers = connector.config["tasks.max"];
-                var isSource = template.type == 'Source';
+                var topics = await connectorObjects.getTopics(connector.config);
+                var workers = connector.config["tasks.max"] ?? 1;
+                var isSource = connector.type == 'source';
                 var type = template.name;
                 var color = template.color;
 //                var html = createCustomHTMLContent(isSource, workers, type, color);
                 isSource ? $scope.sources.push(connector) : $scope.sinks.push(connector);
+                console.log('topic', topics)
 
 
                 angular.forEach(topics, function(t) {
